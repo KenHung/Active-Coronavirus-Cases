@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>確診住院人數</title>
+    <title>確診人數 breakdown</title>
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js"></script>
 </head>
@@ -18,20 +18,40 @@
             .then(json => {
                 var dates = json.map(obj => obj['As of date']);
                 var activeCases = json.map(obj => obj['Number of confirmed cases'] - obj['Number of discharge cases'] - obj['Number of death cases']);
+                var discharged = json.map(obj => obj['Number of discharge cases']);
+                var deaths = json.map(obj => obj['Number of death cases']);
                 
                 var myChart = new Chart(ctx, {
                     type: 'bar',
                     data: {
                         labels: dates,
                         datasets: [{
-                            label: '確診住院人數',
+                            label: '住院人數',
                             data: activeCases,
+                            borderWidth: 1,
+                            backgroundColor: 'rgba(255, 159, 64, 0.2)',
+                            borderColor: 'rgba(255, 159, 64, 1)'
+                        },
+                        {
+                            label: '出院人數',
+                            data: discharged,
+                            borderWidth: 1,
+                            backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                            borderColor: 'rgba(75, 192, 192, 1)'
+                        },
+                        {
+                            label: '死亡人數',
+                            data: deaths,
                             borderWidth: 1
                         }]
                     },
                     options: {
                         scales: {
+                            xAxes: [{
+                                stacked: true
+                            }],
                             yAxes: [{
+                                stacked: true,
                                 ticks: {
                                     beginAtZero: true
                                 }
