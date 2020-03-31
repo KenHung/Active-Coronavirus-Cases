@@ -11,8 +11,10 @@
 
 <body>
     <canvas id="myChart" width="800" height="400"></canvas>
+    <canvas id="daily" width="800" height="400"></canvas>
     <script>
         var ctx = document.getElementById('myChart').getContext('2d');
+        var daily = document.getElementById('daily').getContext('2d');
         fetch('https://api.data.gov.hk/v2/filter?q=%7B%22resource%22%3A%22http%3A%2F%2Fwww.chp.gov.hk%2Ffiles%2Fmisc%2Flatest_situation_of_reported_cases_wuhan_eng.csv%22%2C%22section%22%3A1%2C%22format%22%3A%22json%22%2C%22filters%22%3A%5B%5B3%2C%22gt%22%2C%5B%220%22%5D%5D%5D%7D')
             .then(resp => resp.json())
             .then(json => {
@@ -26,21 +28,21 @@
                     data: {
                         labels: dates,
                         datasets: [{
-                            label: '住院人數',
+                            label: '治理中',
                             data: activeCases,
                             borderWidth: 1,
                             backgroundColor: 'rgba(255, 159, 64, 0.2)',
                             borderColor: 'rgba(255, 159, 64, 1)'
                         },
                         {
-                            label: '出院人數',
+                            label: '康復',
                             data: discharged,
                             borderWidth: 1,
                             backgroundColor: 'rgba(75, 192, 192, 0.2)',
                             borderColor: 'rgba(75, 192, 192, 1)'
                         },
                         {
-                            label: '死亡人數',
+                            label: '死亡',
                             data: deaths,
                             borderWidth: 1
                         }]
@@ -57,6 +59,23 @@
                                 }
                             }]
                         }
+                    }
+                });
+
+                var confirmedCases = json.map(obj => obj['Number of confirmed cases']);
+                var newCases = [];
+                for (var i = 0; i < activeCases.length; i++) {
+                    const newCasesOfDay = i === 0 ? confirmedCases[i] : confirmedCases[i] - confirmedCases[i - 1];
+                    newCases.push(newCasesOfDay);
+                }
+                var dailyChart = new Chart(daily, {
+                    type: 'bar',
+                    data: {
+                        labels: dates,
+                        datasets: [{
+                            label: '新增個案',
+                            data: newCases
+                        }]
                     }
                 });
             });
