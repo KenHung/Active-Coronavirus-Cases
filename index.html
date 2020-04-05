@@ -15,7 +15,7 @@
     <script>
         var ctx = document.getElementById('myChart').getContext('2d');
         var daily = document.getElementById('daily').getContext('2d');
-        fetch('https://api.data.gov.hk/v2/filter?q=%7B%22resource%22%3A%22http%3A%2F%2Fwww.chp.gov.hk%2Ffiles%2Fmisc%2Flatest_situation_of_reported_cases_wuhan_eng.csv%22%2C%22section%22%3A1%2C%22format%22%3A%22json%22%2C%22filters%22%3A%5B%5B3%2C%22gt%22%2C%5B%220%22%5D%5D%5D%7D')
+        fetch('https://api.data.gov.hk/v2/filter?q=%7B%22resource%22%3A%22http%3A%2F%2Fwww.chp.gov.hk%2Ffiles%2Fmisc%2Flatest_situation_of_reported_cases_covid_19_eng.csv%22%2C%22section%22%3A1%2C%22format%22%3A%22json%22%2C%22filters%22%3A%5B%5B3%2C%22gt%22%2C%5B%220%22%5D%5D%5D%7D')
             .then(resp => resp.json())
             .then(json => {
                 var dates = json.map(obj => obj['As of date']);
